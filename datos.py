@@ -1,8 +1,13 @@
+import os
 import numpy as np
 import pandas as pd
 
-def generar_dataset_csv(n_muestras=300, seed=42, ruta_base='dataset'):
+def generar_dataset_csv(n_muestras=300, seed=42, ruta_base='dataset/dataset'):
     np.random.seed(seed)
+
+    # Crear carpeta 'dataset' si no existe
+    dataset_dir = "dataset"
+    os.makedirs(dataset_dir, exist_ok=True)
 
     # Generar datos simulados
     monto = np.random.uniform(1, 1000, n_muestras)
