@@ -10,7 +10,7 @@ from sklearn.model_selection import train_test_split
 
 
 # 1. Cargar dataset para prueba
-df = pd.read_csv("dataset2.csv")
+df = pd.read_csv("dataset.csv")
 
 X = df.drop("isFraud", axis=1).values
 y = df["isFraud"].values.reshape(-1, 1)
@@ -33,7 +33,7 @@ modelo_path = "modelo_mlp.npz"
 if not os.path.exists(modelo_path):
     raise FileNotFoundError(f"No se encontró el archivo de modelo '{modelo_path}'. Entrena primero el modelo.")
 
-mlp = MLP(input_size=6, hidden_size=10, activation='relu', learning_rate=0.01)
+mlp = MLP(input_size=6, hidden_size1=10, hidden_size2=6, activation='relu', learning_rate=0.01)
 mlp.cargar_modelo(modelo_path)
 
 # 5. Realizar predicciones

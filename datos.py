@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def generar_dataset_csv(n_muestras=600, seed=42, ruta='dataset2.csv'):
+def generar_dataset_csv(n_muestras=300, seed=42, ruta='dataset.csv'):
     np.random.seed(seed)
 
     # Generar datos simulados
@@ -10,12 +10,12 @@ def generar_dataset_csv(n_muestras=600, seed=42, ruta='dataset2.csv'):
     hora = np.random.uniform(0, 24, n_muestras)
     ubicacion = np.random.uniform(0, 100, n_muestras)
     frecuencia = np.random.randint(1, 30, n_muestras)
-    dispositivo_nuevo = np.random.choice([0, 1], n_muestras, p=[0.4, 0.6])  # ahora 60% chance dispositivo nuevo
+    dispositivo_nuevo = np.random.choice([0, 1], n_muestras)
 
-    # Regla básica para clasificar fraude con mayor probabilidad
-    is_fraud = ((monto > 500) & (dispositivo_nuevo == 1) & (frecuencia < 10)).astype(int)
+    # Regla modificada para generar más fraudes
+    is_fraud = ((monto > 400) & (dispositivo_nuevo == 1) & (frecuencia < 15)).astype(int)
 
-    # Crear DataFrame
+    # Crear DataFrame original
     df = pd.DataFrame({
         'monto': monto,
         'tipo_transaccion': tipo_transaccion,
@@ -26,9 +26,15 @@ def generar_dataset_csv(n_muestras=600, seed=42, ruta='dataset2.csv'):
         'isFraud': is_fraud
     })
 
+    # Sobremuestreo manual de fraudes para mejorar el balance
+    df_fraude = df[df["isFraud"] == 1]
+    if not df_fraude.empty:
+        df = pd.concat([df, df_fraude.sample(frac=3, replace=True, random_state=seed)], ignore_index=True)
+
     # Guardar como CSV
     df.to_csv(ruta, index=False)
-    print(f"✅ Dataset generado y guardado como '{ruta}' con {n_muestras} registros.")
+    print(f"✅ Dataset generado y guardado como '{ruta}' con {len(df)} registros (incluye sobremuestreo de fraudes).")
 
+# Ejecutar directamente si se corre como script
 if __name__ == "__main__":
     generar_dataset_csv()
