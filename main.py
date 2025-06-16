@@ -35,7 +35,11 @@ mlp = MLP(input_size=6, hidden_size1=10, hidden_size2=6, activation='relu', lear
 mlp.cargar_modelo(modelo_path)
 
 # 5. Realizar predicciones
-y_pred = mlp.predict(X_test)
+#y_pred = mlp.predict(X_test)
+
+y_prob = mlp.predict_proba(X_test)
+y_pred = (y_prob >= 0.45).astype(int)  # Puedes probar con 0.6, 0.65, 0.7...
+
 
 # 6. Evaluar resultados
 print("\n✅ Reporte de Clasificación:")

@@ -77,6 +77,10 @@ class MLP:
 
     def predict(self, X):
         return (self.forward(X) > 0.5).astype(int)
+    
+    def predict_proba(self, X):
+        return self.forward(X)
+
 
     def guardar_modelo(self, archivo):
         # Crear carpeta 'models' si no existe
