@@ -66,17 +66,26 @@ class MLP:
         self.b3 -= self.lr * db3
 
     def train(self, X, y, epochs=1000):
+        self.loss_history = []  # Store loss for each epoch
+        self.metrics_history = []  # Store metrics for each epoch
+
         for epoch in range(epochs):
             y_pred = self.forward(X)
 
             # Cross-entropy loss
             loss = -np.mean(y * np.log(y_pred + 1e-8) + (1 - y) * np.log(1 - y_pred + 1e-8))
+            self.loss_history.append(loss)
+
+            # Calculate metrics (accuracy for simplicity)
+            accuracy = np.mean((y_pred > 0.5).astype(int) == y)
+            self.metrics_history.append({'accuracy': accuracy})
+
             self.backward(X, y)
             if epoch % 100 == 0:
-                print(f"Epoch {epoch}: Loss {loss:.4f}")
+                print(f"Epoch {epoch}: Loss {loss:.4f}, Accuracy {accuracy:.4f}")
 
     def predict(self, X):
-        return (self.forward(X) > 0.5).astype(int)
+        return (self.forward(X) > 0.65).astype(int)
     
     def predict_proba(self, X):
         return self.forward(X)
@@ -124,3 +133,19 @@ class MLP:
         scaler = joblib.load(ruta)
         print(f"📥 Scaler cargado desde '{ruta}'")
         return scaler
+
+    def guardar_metricas(self, archivo):
+        metrics_dir = "metrics"
+        if not os.path.exists(metrics_dir):
+            os.makedirs(metrics_dir)
+        ruta = os.path.join(metrics_dir, archivo if archivo.endswith('.npz') else archivo + ".npz")
+        np.savez(ruta, loss_history=self.loss_history, metrics_history=self.metrics_history)
+        print(f"✅ Métricas guardadas en '{ruta}'")
+
+    def cargar_metricas(self, archivo):
+        metrics_dir = "metrics"
+        ruta = archivo if os.path.dirname(archivo) == metrics_dir else os.path.join(metrics_dir, archivo if archivo.endswith('.npz') else archivo + ".npz")
+        datos = np.load(ruta, allow_pickle=True)
+        self.loss_history = datos['loss_history']
+        self.metrics_history = datos['metrics_history']
+        print(f"📥 Métricas cargadas desde '{ruta}'")
