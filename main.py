@@ -8,20 +8,17 @@ import os
 import joblib
 from sklearn.model_selection import train_test_split
 
-
 # 1. Cargar dataset para prueba
 df = pd.read_csv("dataset.csv")
-
 X = df.drop("isFraud", axis=1).values
 y = df["isFraud"].values.reshape(-1, 1)
 
-# 2. Cargar scaler y normalizar datos (solo test)
+# 2. Cargar scaler y normalizar datos
 if os.path.exists("scaler.pkl"):
     scaler = joblib.load("scaler.pkl")
     X = scaler.transform(X)
 else:
     print("⚠️ No se encontró el scaler.pkl, normalizando con StandardScaler nuevo.")
-    from sklearn.preprocessing import StandardScaler
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
@@ -46,14 +43,27 @@ print("✅ Matriz de Confusión:")
 print(confusion_matrix(y_test, y_pred))
 print(f"✅ Exactitud del modelo sobre datos no vistos: {accuracy_score(y_test, y_pred) * 100:.2f}%")
 
-# 7. Gráfico combinado
-reales_legitimas = int((y_test == 0).sum())
-reales_fraude = int((y_test == 1).sum())
+# 7. Estadísticas por clase
+fraudes_reales = int((y_test == 1).sum())
+fraudes_detectados = int(((y_test == 1) & (y_pred == 1)).sum())
+legitimas_reales = int((y_test == 0).sum())
+legitimas_detectadas = int(((y_test == 0) & (y_pred == 0)).sum())
+
+print(f"\n🔍 Transacciones Fraudulentas:")
+print(f"  - Total reales en el test: {fraudes_reales}")
+print(f"  - Detectadas correctamente: {fraudes_detectados}")
+
+print(f"\n💳 Transacciones Legítimas:")
+print(f"  - Total reales en el test: {legitimas_reales}")
+print(f"  - Detectadas correctamente: {legitimas_detectadas}")
+
+# 8. Gráfico combinado
+reales_legitimas = legitimas_reales
+reales_fraude = fraudes_reales
 pred_legitimas = int((y_pred == 0).sum())
 pred_fraude = int((y_pred == 1).sum())
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-
 axes[0].bar(['Reales', 'Predichas'], [reales_legitimas, pred_legitimas], color=['skyblue', 'orange'])
 axes[0].set_title('Transacciones Legítimas')
 axes[0].set_ylabel('Cantidad')
@@ -65,4 +75,4 @@ plt.suptitle('Comparación de Transacciones Reales vs Predichas')
 plt.tight_layout(rect=[0, 0, 1, 0.95])
 plt.savefig("grafico_comparativo_transacciones.png")
 
-print("📊 Gráfico combinado guardado como 'grafico_comparativo_transacciones.png'")
+print("\n📊 Gráfico combinado guardado como 'grafico_comparativo_transacciones.png'")
