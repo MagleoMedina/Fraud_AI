@@ -14,8 +14,8 @@ X = df.drop("isFraud", axis=1).values
 y = df["isFraud"].values.reshape(-1, 1)
 
 # 2. Cargar scaler y normalizar datos
-if os.path.exists("scaler.pkl"):
-    scaler = joblib.load("scaler.pkl")
+if os.path.exists("models\scaler.pkl"):
+    scaler = joblib.load("models\scaler.pkl")
     X = scaler.transform(X)
 else:
     print("⚠️ No se encontró el scaler.pkl, normalizando con StandardScaler nuevo.")
@@ -26,7 +26,7 @@ else:
 _, X_test, _, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
 
 # 4. Cargar modelo
-modelo_path = "modelo_mlp.npz"
+modelo_path = "models\modelo_mlp.npz"
 if not os.path.exists(modelo_path):
     raise FileNotFoundError(f"No se encontró el archivo de modelo '{modelo_path}'. Entrena primero el modelo.")
 

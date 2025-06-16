@@ -32,6 +32,9 @@ mlp.guardar_modelo("modelo_mlp")
 
 # 8. Guardar scaler para normalizar datos en prueba (opcional)
 import joblib
-joblib.dump(scaler, "scaler.pkl")
+models_dir = "models"
+if not os.path.exists(models_dir):
+    os.makedirs(models_dir)
+joblib.dump(scaler, os.path.join(models_dir, "scaler.pkl"))
 
 print("✅ Entrenamiento completado y modelo guardado.")

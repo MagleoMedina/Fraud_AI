@@ -1,4 +1,5 @@
 import numpy as np
+import os
 
 def sigmoid(x): return 1 / (1 + np.exp(-x))
 def sigmoid_deriv(x): return x * (1 - x)
@@ -78,18 +79,25 @@ class MLP:
         return (self.forward(X) > 0.5).astype(int)
 
     def guardar_modelo(self, archivo):
-        np.savez(archivo,
+        # Crear carpeta 'models' si no existe
+        models_dir = "models"
+        if not os.path.exists(models_dir):
+            os.makedirs(models_dir)
+        ruta = os.path.join(models_dir, archivo + ".npz")
+        np.savez(ruta,
                  w1=self.w1, b1=self.b1,
                  w2=self.w2, b2=self.b2,
                  w3=self.w3, b3=self.b3)
-        print(f"✅ Modelo guardado en '{archivo}.npz'")
+        print(f"✅ Modelo guardado en '{ruta}'")
 
     def cargar_modelo(self, archivo):
-        datos = np.load(archivo)
+        models_dir = "models"
+        ruta = os.path.join(models_dir, archivo if archivo.endswith('.npz') else archivo + ".npz")
+        datos = np.load(ruta)
         self.w1 = datos['w1']
         self.b1 = datos['b1']
         self.w2 = datos['w2']
         self.b2 = datos['b2']
         self.w3 = datos['w3']
         self.b3 = datos['b3']
-        print(f"📥 Modelo cargado desde '{archivo}'")
+        print(f"📥 Modelo cargado desde '{ruta}'")
