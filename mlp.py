@@ -76,7 +76,7 @@ class MLP:
                 print(f"Epoch {epoch}: Loss {loss:.4f}")
 
     def predict(self, X):
-        return (self.forward(X) > 0.5).astype(int)
+        return (self.forward(X) > 0.65).astype(int)
     
     def predict_proba(self, X):
         return self.forward(X)

@@ -2,7 +2,6 @@ import pandas as pd
 from mlp import MLP
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix, accuracy_score
-import numpy as np
 import matplotlib.pyplot as plt
 import os
 import joblib
@@ -39,11 +38,11 @@ mlp = MLP(input_size=6, hidden_size1=10, hidden_size2=6, activation='relu', lear
 mlp.cargar_modelo(modelo_path)
 
 # 5. Realizar predicciones
-#y_pred = mlp.predict(X_test)
+y_pred = mlp.predict(X_test)
 
-y_prob = mlp.predict_proba(X_test)
-y_pred = (y_prob >= 0.65).astype(int)  # Puedes probar con 0.6, 0.65, 0.7...
-
+#lo use para testear sensibilidad
+#y_prob = mlp.predict_proba(X_test)
+y#_pred = (y_prob >= 0.65).astype(int)  
 
 # 6. Evaluar resultados
 print("\n✅ Reporte de Clasificación:")
@@ -66,22 +65,22 @@ print(f"\n💳 Transacciones Legítimas:")
 print(f"  - Total reales en el test: {legitimas_reales}")
 print(f"  - Detectadas correctamente: {legitimas_detectadas}")
 
-# 8. Gráfico combinado
-reales_legitimas = legitimas_reales
-reales_fraude = fraudes_reales
-pred_legitimas = int((y_pred == 0).sum())
-pred_fraude = int((y_pred == 1).sum())
+# Crear gráfica de barras con los datos de fraudes y legítimas
+fig, ax = plt.subplots(figsize=(8, 5))
+categorias = ['Fraudes Reales', 'Fraudes Detectados', 'Legítimas Reales', 'Legítimas Detectadas']
+valores = [fraudes_reales, fraudes_detectados, legitimas_reales, legitimas_detectadas]
+colores = ['red', 'green', 'blue', 'purple']
 
-fig, axes = plt.subplots(1, 2, figsize=(12, 5))
-axes[0].bar(['Reales', 'Predichas'], [reales_legitimas, pred_legitimas], color=['skyblue', 'orange'])
-axes[0].set_title('Transacciones Legítimas')
-axes[0].set_ylabel('Cantidad')
+ax.bar(categorias, valores, color=colores)
+ax.set_title('Comparación de Transacciones')
+ax.set_ylabel('Cantidad')
+ax.set_xlabel('Categorías')
+plt.xticks(rotation=45)
 
-axes[1].bar(['Reales', 'Predichas'], [reales_fraude, pred_fraude], color=['skyblue', 'orange'])
-axes[1].set_title('Transacciones Fraudulentas')
+# Guardar gráfica en la carpeta 'graphics'
+output_path = os.path.join(output_dir, "grafico_transacciones_barras.png")
+plt.tight_layout()
+plt.savefig(output_path)
+plt.close()
 
-plt.suptitle('Comparación de Transacciones Reales vs Predichas')
-plt.tight_layout(rect=[0, 0, 1, 0.95])
-plt.savefig(os.path.join(output_dir, "grafico_comparativo_transacciones.png"))
-
-print("\n📊 Gráfico combinado guardado como 'grafico_comparativo_transacciones.png'")
+print(f"📊 Gráfico de barras guardado como '{output_path}'")

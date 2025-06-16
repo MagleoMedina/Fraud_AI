@@ -1,5 +1,5 @@
 import pandas as pd
-from datos import generar_dataset_csv
+from generador_dataset import generar_dataset_csv
 from mlp import MLP
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
