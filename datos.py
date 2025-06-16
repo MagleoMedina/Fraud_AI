@@ -1,7 +1,7 @@
 import numpy as np
 import pandas as pd
 
-def generar_dataset_csv(n_muestras=300, seed=42, ruta='dataset.csv'):
+def generar_dataset_csv(n_muestras=300, seed=42, ruta_base='dataset'):
     np.random.seed(seed)
 
     # Generar datos simulados
@@ -31,9 +31,14 @@ def generar_dataset_csv(n_muestras=300, seed=42, ruta='dataset.csv'):
     if not df_fraude.empty:
         df = pd.concat([df, df_fraude.sample(frac=3, replace=True, random_state=seed)], ignore_index=True)
 
+    # Dividir el dataset en 60% y 40%
+    df_60 = df.sample(frac=0.6, random_state=seed)
+    df_40 = df.drop(df_60.index)
+
     # Guardar como CSV
-    df.to_csv(ruta, index=False)
-    print(f"✅ Dataset generado y guardado como '{ruta}' con {len(df)} registros (incluye sobremuestreo de fraudes).")
+    df_60.to_csv(f"{ruta_base}60.csv", index=False)
+    df_40.to_csv(f"{ruta_base}40.csv", index=False)
+    print(f"✅ Dataset dividido y guardado como '{ruta_base}60.csv' ({len(df_60)} registros) y '{ruta_base}40.csv' ({len(df_40)} registros).")
 
 # Ejecutar directamente si se corre como script
 if __name__ == "__main__":
