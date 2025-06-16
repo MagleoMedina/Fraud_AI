@@ -6,11 +6,12 @@ from sklearn.preprocessing import StandardScaler
 import os
 
 # 1. Generar dataset (solo si no existe para no sobreescribir)
-if not os.path.exists("dataset.csv"):
+if not os.path.exists("dataset60.csv") or not os.path.exists("dataset40.csv"):
+    print("⚠️ Archivos 'data60.csv' o 'data40.csv' no encontrados. Generando nuevamente...")
     generar_dataset_csv()
 
-# 2. Cargar dataset
-df = pd.read_csv("dataset.csv")
+# 2. Cargar dataset de entrenamiento (60%)
+df = pd.read_csv("dataset60.csv")
 
 # 3. Preparar datos
 X = df.drop("isFraud", axis=1).values
@@ -32,6 +33,9 @@ mlp.guardar_modelo("modelo_mlp")
 
 # 8. Guardar scaler para normalizar datos en prueba (opcional)
 import joblib
-joblib.dump(scaler, "scaler.pkl")
+models_dir = "models"
+if not os.path.exists(models_dir):
+    os.makedirs(models_dir)
+joblib.dump(scaler, os.path.join(models_dir, "scaler.pkl"))
 
 print("✅ Entrenamiento completado y modelo guardado.")

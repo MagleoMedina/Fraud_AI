@@ -6,27 +6,28 @@ import numpy as np
 import matplotlib.pyplot as plt
 import os
 import joblib
-from sklearn.model_selection import train_test_split
 
-# 1. Cargar dataset para prueba
-df = pd.read_csv("dataset.csv")
+# 1. Cargar dataset para prueba (40%)
+df = pd.read_csv("dataset40.csv")
 X = df.drop("isFraud", axis=1).values
 y = df["isFraud"].values.reshape(-1, 1)
 
 # 2. Cargar scaler y normalizar datos
-if os.path.exists("scaler.pkl"):
-    scaler = joblib.load("scaler.pkl")
+scaler_path = os.path.join("models", "scaler.pkl")
+if os.path.exists(scaler_path):
+    scaler = joblib.load(scaler_path)
     X = scaler.transform(X)
 else:
     print("⚠️ No se encontró el scaler.pkl, normalizando con StandardScaler nuevo.")
     scaler = StandardScaler()
     X = scaler.fit_transform(X)
 
-# 3. Dividir datos para prueba
-_, X_test, _, y_test = train_test_split(X, y, test_size=0.4, random_state=42)
+# 3. Dividir datos para prueba (ya no es necesario dividir, usar todo X y y)
+X_test = X
+y_test = y
 
 # 4. Cargar modelo
-modelo_path = "modelo_mlp.npz"
+modelo_path = os.path.join("models", "modelo_mlp.npz")
 if not os.path.exists(modelo_path):
     raise FileNotFoundError(f"No se encontró el archivo de modelo '{modelo_path}'. Entrena primero el modelo.")
 
@@ -34,7 +35,11 @@ mlp = MLP(input_size=6, hidden_size1=10, hidden_size2=6, activation='relu', lear
 mlp.cargar_modelo(modelo_path)
 
 # 5. Realizar predicciones
-y_pred = mlp.predict(X_test)
+#y_pred = mlp.predict(X_test)
+
+y_prob = mlp.predict_proba(X_test)
+y_pred = (y_prob >= 0.65).astype(int)  # Puedes probar con 0.6, 0.65, 0.7...
+
 
 # 6. Evaluar resultados
 print("\n✅ Reporte de Clasificación:")
@@ -49,7 +54,7 @@ fraudes_detectados = int(((y_test == 1) & (y_pred == 1)).sum())
 legitimas_reales = int((y_test == 0).sum())
 legitimas_detectadas = int(((y_test == 0) & (y_pred == 0)).sum())
 
-print(f"\n🔍 Transacciones Fraudulentas:")
+print(f"\n⚠️  Transacciones Fraudulentas:")
 print(f"  - Total reales en el test: {fraudes_reales}")
 print(f"  - Detectadas correctamente: {fraudes_detectados}")
 
