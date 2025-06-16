@@ -130,3 +130,38 @@ plt.savefig(os.path.join(output_dir, "grafico_matriz_confusion.png"))
 plt.close()
 
 print(f"📊 Gráfico de la matriz de confusión guardado como '{os.path.join(output_dir, 'grafico_matriz_confusion.png')}'")
+
+# Cargar métricas de entrenamiento
+metricas_path = os.path.join("metrics", "metricas_entrenamiento.npz")
+if os.path.exists(metricas_path):
+    datos_metricas = np.load(metricas_path, allow_pickle=True)
+    loss_history = datos_metricas['loss_history']
+    metrics_history = datos_metricas['metrics_history']
+else:
+    raise FileNotFoundError(f"No se encontró el archivo de métricas '{metricas_path}'. Entrena primero el modelo.")
+
+# Graficar curvas de aprendizaje (Loss y Accuracy)
+fig, ax = plt.subplots(2, 1, figsize=(10, 8))
+
+# Loss
+ax[0].plot(loss_history, label="Loss", color="blue")
+ax[0].set_title("Curva de Pérdida")
+ax[0].set_xlabel("Época")
+ax[0].set_ylabel("Pérdida")
+ax[0].legend()
+
+# Accuracy
+accuracy_history = [m['accuracy'] for m in metrics_history]
+ax[1].plot(accuracy_history, label="Exactitud", color="green")
+ax[1].set_title("Curva de Exactitud")
+ax[1].set_xlabel("Época")
+ax[1].set_ylabel("Exactitud")
+ax[1].legend()
+
+# Guardar gráfica en la carpeta 'graphics'
+output_path = os.path.join(output_dir, "curvas_aprendizaje.png")
+plt.tight_layout()
+plt.savefig(output_path)
+plt.close()
+
+print(f"📊 Gráfico de curvas de aprendizaje guardado como '{output_path}'")

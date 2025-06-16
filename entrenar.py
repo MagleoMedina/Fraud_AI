@@ -28,8 +28,9 @@ X_train, _, y_train, _ = train_test_split(X, y, test_size=0.4, random_state=42)
 mlp = MLP(input_size=6, hidden_size1=10, hidden_size2=6, activation='relu', learning_rate=0.01)
 mlp.train(X_train, y_train, epochs=1000)
 
-# 7. Guardar modelo entrenado
+# Guardar modelo entrenado y métricas
 mlp.guardar_modelo("modelo_mlp")
+mlp.guardar_metricas("metricas_entrenamiento")
 
 # 8. Guardar scaler para normalizar datos en prueba (opcional)
 import joblib
