@@ -92,7 +92,8 @@ class MLP:
 
     def cargar_modelo(self, archivo):
         models_dir = "models"
-        ruta = os.path.join(models_dir, archivo if archivo.endswith('.npz') else archivo + ".npz")
+        # Check if 'models' is already in the path
+        ruta = archivo if os.path.dirname(archivo) == models_dir else os.path.join(models_dir, archivo if archivo.endswith('.npz') else archivo + ".npz")
         datos = np.load(ruta)
         self.w1 = datos['w1']
         self.b1 = datos['b1']
@@ -101,3 +102,21 @@ class MLP:
         self.w3 = datos['w3']
         self.b3 = datos['b3']
         print(f"📥 Modelo cargado desde '{ruta}'")
+
+    def guardar_scaler(self, scaler, archivo):
+        import joblib
+        models_dir = "models"
+        if not os.path.exists(models_dir):
+            os.makedirs(models_dir)
+        ruta = os.path.join(models_dir, archivo if archivo.endswith('.pkl') else archivo + ".pkl")
+        joblib.dump(scaler, ruta)
+        print(f"✅ Scaler guardado en '{ruta}'")
+
+    def cargar_scaler(self, archivo):
+        import joblib
+        models_dir = "models"
+        # Check if 'models' is already in the path
+        ruta = archivo if os.path.dirname(archivo) == models_dir else os.path.join(models_dir, archivo if archivo.endswith('.pkl') else archivo + ".pkl")
+        scaler = joblib.load(ruta)
+        print(f"📥 Scaler cargado desde '{ruta}'")
+        return scaler
