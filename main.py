@@ -7,8 +7,12 @@ import matplotlib.pyplot as plt
 import os
 import joblib
 
+# Crear la carpeta 'graphics' si no existe
+output_dir = "graphics"
+os.makedirs(output_dir, exist_ok=True)
+
 # 1. Cargar dataset para prueba (40%)
-df = pd.read_csv("dataset40.csv")
+df = pd.read_csv("dataset/dataset40.csv")
 X = df.drop("isFraud", axis=1).values
 y = df["isFraud"].values.reshape(-1, 1)
 
@@ -78,6 +82,6 @@ axes[1].set_title('Transacciones Fraudulentas')
 
 plt.suptitle('Comparación de Transacciones Reales vs Predichas')
 plt.tight_layout(rect=[0, 0, 1, 0.95])
-plt.savefig("grafico_comparativo_transacciones.png")
+plt.savefig(os.path.join(output_dir, "grafico_comparativo_transacciones.png"))
 
 print("\n📊 Gráfico combinado guardado como 'grafico_comparativo_transacciones.png'")

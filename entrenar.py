@@ -6,12 +6,12 @@ from sklearn.preprocessing import StandardScaler
 import os
 
 # 1. Generar dataset (solo si no existe para no sobreescribir)
-if not os.path.exists("dataset60.csv") or not os.path.exists("dataset40.csv"):
-    print("⚠️ Archivos 'data60.csv' o 'data40.csv' no encontrados. Generando nuevamente...")
+if not os.path.exists("dataset/dataset60.csv") or not os.path.exists("dataset/dataset40.csv"):
+    print("⚠️ Archivos 'dataset60.csv' o 'dataset40.csv' no encontrados. Generando nuevamente...")
     generar_dataset_csv()
 
 # 2. Cargar dataset de entrenamiento (60%)
-df = pd.read_csv("dataset60.csv")
+df = pd.read_csv("dataset/dataset60.csv")
 
 # 3. Preparar datos
 X = df.drop("isFraud", axis=1).values
