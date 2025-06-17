@@ -4,6 +4,7 @@ from mlp import MLP
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import os
+import joblib
 
 # 1. Generar dataset (solo si no existe para no sobreescribir)
 if not os.path.exists("dataset/dataset60.csv") or not os.path.exists("dataset/dataset40.csv"):
@@ -32,11 +33,12 @@ mlp.train(X_train, y_train, epochs=1000)
 mlp.guardar_modelo("modelo_mlp")
 mlp.guardar_metricas("metricas_entrenamiento")
 
-# 8. Guardar scaler para normalizar datos en prueba (opcional)
-import joblib
+# 8. Guardar scaler para normalizar datos en prueba 
 models_dir = "models"
+
 if not os.path.exists(models_dir):
     os.makedirs(models_dir)
+    
 joblib.dump(scaler, os.path.join(models_dir, "scaler.pkl"))
 
-print("✅ Entrenamiento completado y modelo guardado.")
+print("Entrenamiento completado y modelo guardado.")

@@ -48,7 +48,7 @@ y_pred = mlp.predict(X_test)
 # 6. Evaluar resultados
 report_dict = classification_report(y_test, y_pred, output_dict=True)
 cm = confusion_matrix(y_test, y_pred)
-print(f"✅ Exactitud del modelo sobre datos no vistos: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+print(f"Exactitud del modelo sobre datos no vistos: {accuracy_score(y_test, y_pred) * 100:.2f}%")
 
 # 7. Estadísticas por clase
 fraudes_reales = int((y_test == 1).sum())
