@@ -11,7 +11,7 @@ import numpy as np
 output_dir = "graphics"
 os.makedirs(output_dir, exist_ok=True)
 
-# 1. Cargar dataset para prueba (40%)
+# 1. Cargar dataset para prueba (40%) y omitir la columna isFraud
 df = pd.read_csv("dataset/dataset40.csv")
 X = df.drop("isFraud", axis=1).values
 y = df["isFraud"].values.reshape(-1, 1)
@@ -48,7 +48,7 @@ y_pred = mlp.predict(X_test)
 # 6. Evaluar resultados
 report_dict = classification_report(y_test, y_pred, output_dict=True)
 cm = confusion_matrix(y_test, y_pred)
-print(f"✅ Exactitud del modelo sobre datos no vistos: {accuracy_score(y_test, y_pred) * 100:.2f}%")
+print(f"Exactitud del modelo sobre datos no vistos: {accuracy_score(y_test, y_pred) * 100:.2f}%")
 
 # 7. Estadísticas por clase
 fraudes_reales = int((y_test == 1).sum())

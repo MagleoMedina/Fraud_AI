@@ -1,14 +1,21 @@
 import numpy as np
 import os
 
+# Función de activación sigmoide
 def sigmoid(x): return 1 / (1 + np.exp(-x))
+# Derivada de la función sigmoide
 def sigmoid_deriv(x): return x * (1 - x)
 
+# Función de activación ReLU
 def relu(x): return np.maximum(0, x)
+# Derivada de la función ReLU
 def relu_deriv(x): return (x > 0).astype(float)
 
 class MLP:
     def __init__(self, input_size, hidden_size1=10, hidden_size2=6, activation='relu', learning_rate=0.01):
+        """
+        Inicializa la red neuronal multicapa (MLP) con los tamaños de las capas y la función de activación.
+        """
         self.lr = learning_rate
         self.activation_name = activation
 
@@ -29,6 +36,10 @@ class MLP:
         self.act_deriv = sigmoid_deriv if activation == 'sigmoid' else relu_deriv
 
     def forward(self, X):
+        """
+        Realiza la propagación hacia adelante (forward pass) de la red.
+        Devuelve la salida predicha.
+        """
         self.z1 = X @ self.w1 + self.b1
         self.a1 = self.act(self.z1)
 
@@ -40,6 +51,9 @@ class MLP:
         return self.a3
 
     def backward(self, X, y):
+        """
+        Realiza la retropropagación (backpropagation) para actualizar los pesos de la red.
+        """
         m = y.shape[0]
 
         # Salida -> capa 2
@@ -66,6 +80,10 @@ class MLP:
         self.b3 -= self.lr * db3
 
     def train(self, X, y, epochs=1000):
+        """
+        Entrena la red neuronal durante un número de épocas usando los datos X e y.
+        Guarda el historial de pérdida y métricas.
+        """
         self.loss_history = []  # Store loss for each epoch
         self.metrics_history = []  # Store metrics for each epoch
 
@@ -85,13 +103,21 @@ class MLP:
                 print(f"Epoch {epoch}: Loss {loss:.4f}, Accuracy {accuracy:.4f}")
 
     def predict(self, X):
+        """
+        Realiza una predicción binaria (0 o 1) sobre los datos X.
+        """
         return (self.forward(X) > 0.65).astype(int)
     
     def predict_proba(self, X):
+        """
+        Devuelve la probabilidad predicha (salida de la capa sigmoide) para los datos X.
+        """
         return self.forward(X)
 
-
     def guardar_modelo(self, archivo):
+        """
+        Guarda los pesos del modelo en un archivo dentro de la carpeta 'models'.
+        """
         # Crear carpeta 'models' si no existe
         models_dir = "models"
         if not os.path.exists(models_dir):
@@ -101,9 +127,12 @@ class MLP:
                  w1=self.w1, b1=self.b1,
                  w2=self.w2, b2=self.b2,
                  w3=self.w3, b3=self.b3)
-        print(f"✅ Modelo guardado en '{ruta}'")
+        print(f"Modelo guardado en '{ruta}'")
 
     def cargar_modelo(self, archivo):
+        """
+        Carga los pesos del modelo desde un archivo en la carpeta 'models'.
+        """
         models_dir = "models"
         # Check if 'models' is already in the path
         ruta = archivo if os.path.dirname(archivo) == models_dir else os.path.join(models_dir, archivo if archivo.endswith('.npz') else archivo + ".npz")
@@ -117,6 +146,9 @@ class MLP:
         print(f"📥 Modelo cargado desde '{ruta}'")
 
     def guardar_scaler(self, scaler, archivo):
+        """
+        Guarda el objeto scaler (por ejemplo, StandardScaler) en la carpeta 'models'.
+        """
         import joblib
         models_dir = "models"
         if not os.path.exists(models_dir):
@@ -126,6 +158,9 @@ class MLP:
         print(f"✅ Scaler guardado en '{ruta}'")
 
     def cargar_scaler(self, archivo):
+        """
+        Carga el objeto scaler desde la carpeta 'models'.
+        """
         import joblib
         models_dir = "models"
         # Check if 'models' is already in the path
@@ -135,6 +170,9 @@ class MLP:
         return scaler
 
     def guardar_metricas(self, archivo):
+        """
+        Guarda el historial de pérdida y métricas en la carpeta 'metrics'.
+        """
         metrics_dir = "metrics"
         if not os.path.exists(metrics_dir):
             os.makedirs(metrics_dir)
@@ -143,6 +181,9 @@ class MLP:
         print(f"✅ Métricas guardadas en '{ruta}'")
 
     def cargar_metricas(self, archivo):
+        """
+        Carga el historial de pérdida y métricas desde la carpeta 'metrics'.
+        """
         metrics_dir = "metrics"
         ruta = archivo if os.path.dirname(archivo) == metrics_dir else os.path.join(metrics_dir, archivo if archivo.endswith('.npz') else archivo + ".npz")
         datos = np.load(ruta, allow_pickle=True)
