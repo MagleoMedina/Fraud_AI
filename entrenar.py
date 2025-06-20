@@ -1,7 +1,6 @@
 import pandas as pd
 from generador_dataset import generar_dataset_csv
 from mlp import MLP
-from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 import os
 import joblib
@@ -22,8 +21,9 @@ y = df["isFraud"].values.reshape(-1, 1)
 scaler = StandardScaler()
 X = scaler.fit_transform(X)
 
-# 5. Dividir en entrenamiento y prueba (para entrenamiento solo usamos X_train, y_train)
-X_train, _, y_train, _ = train_test_split(X, y, test_size=0.4, random_state=42)
+# Usar el 100% de los datos de dataset60.csv para entrenamiento
+X_train = X
+y_train = y
 
 # 6. Crear y entrenar modelo
 mlp = MLP(input_size=6, hidden_size1=10, hidden_size2=6, activation='relu', learning_rate=0.01)

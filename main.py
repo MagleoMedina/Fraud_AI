@@ -11,7 +11,7 @@ import numpy as np
 output_dir = "graphics"
 os.makedirs(output_dir, exist_ok=True)
 
-# 1. Cargar dataset para prueba (40%)
+# 1. Cargar dataset para prueba (40%) y omitir la columna isFraud
 df = pd.read_csv("dataset/dataset40.csv")
 X = df.drop("isFraud", axis=1).values
 y = df["isFraud"].values.reshape(-1, 1)
