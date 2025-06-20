@@ -27,7 +27,7 @@ y_train = y
 
 # 6. Crear y entrenar modelo
 mlp = MLP(input_size=6, hidden_size1=10, hidden_size2=6, activation='relu', learning_rate=0.01)
-mlp.train(X_train, y_train, epochs=1000)
+mlp.train(X_train, y_train, epochs=1500)
 
 # Guardar modelo entrenado y métricas
 mlp.guardar_modelo("modelo_mlp")
