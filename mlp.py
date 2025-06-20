@@ -79,7 +79,7 @@ class MLP:
         self.w3 -= self.lr * dw3
         self.b3 -= self.lr * db3
 
-    def train(self, X, y, epochs=1000):
+    def train(self, X, y, epochs=1500):
         """
         Entrena la red neuronal durante un número de épocas usando los datos X e y.
         Guarda el historial de pérdida y métricas.
