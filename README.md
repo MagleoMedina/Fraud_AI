@@ -1,7 +1,5 @@
 # Fraud_AI
 
-# Fraud_AI
-
 Este proyecto implementa un sistema de detección de fraude en transacciones bancarias utilizando una red neuronal multicapa (MLP) desarrollada desde cero en NumPy. Incluye generación de datos sintéticos, entrenamiento, evaluación y visualización de resultados.
 
 ## Estructura del Proyecto
@@ -76,7 +74,7 @@ python main.py
 
 ## Requisitos
 
-- Python 3.x
+- Python 3.12.10 o superior
 - numpy
 - pandas
 - scikit-learn
@@ -89,6 +87,7 @@ pip install numpy pandas scikit-learn matplotlib joblib
 
 ## Créditos
 
-Desarrollado para un proyecto de detección de fraude en transacciones bancarias usando Perceptron Multicapa
+Hector Tovar
+Magleo Medina
 
 ---
