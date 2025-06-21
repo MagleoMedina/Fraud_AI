@@ -1,4 +1,4 @@
-# Fraud_AI
+# Fraud_AI 💳
 
 Este proyecto implementa un sistema de detección de fraude en transacciones bancarias utilizando una red neuronal multicapa (MLP) desarrollada desde cero en NumPy. Incluye generación de datos sintéticos, entrenamiento, evaluación y visualización de resultados.
 
